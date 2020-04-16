@@ -25,13 +25,17 @@ mongoose.connect(dbConfig.url, {
     process.exit();
 });
 
+const studentRoute = require('./routes/student.route.js');
+
+app.use('/', studentRoute);
+
 app.get('/', (req, res) => {
     res.json({
         "message": "Welcome to Smansara Students API. Manage your students here. Nb: Drop out them who are annoying, haha!"
     });
 });
 
-require('./routes/student.route.js')(app);
+// require('./routes/student.route.js');
 app.listen(8080, () => {
     console.log("Server is listening on port 8080");
 });

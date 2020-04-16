@@ -1,17 +1,96 @@
-module.exports = (app) => {
-    const students = require('../controllers/student.controller.js');
+const express = require('express');
+const router = express.Router();
+const Student = require('../models/student.model.js');
 
-    //CREATE METHOD
-    app.post('/students', students.insertStudent);
+//CREATE
+router.post('/lookupstudents', (req, res) => {
+    const student = new Student({
+        name: req.body.name,
+        nis: req.body.nis,
+        classroom: req.body.classroom
+    });
 
-    //READ METHOD
-    app.get('/students', students.getStudents);
-    app.get('/students/:studentId', students.getStudent);
+    student.save()
+    .then(data => {
+        res.json(data);
+    })
+    .catch(err => {
+        res.json({
+            message: err
+        });
+    });
+});
 
-    //UPDATE METHOD
-    app.put('/students/:studentId', students.updateStudent);
+// READ ALL
+router.get('/lookupstudents', async(req, res) => {
+    try {
+        const student = await Student.find()
+        res.json(student)
+        } catch(err) {
+        res.json({
+            message: err
+        });
+    }
+});
 
-    //DELETE METHOD
-    app.delete('/students/:studentId', students.deleteStudent);
+// READ BY ID
+router.get('/lookupstudentid', async(req, res) => {
+    try {
+        const student = await Student.find({_id: req.query._id})
+        res.json(student)
+        } catch(err) {
+        res.json({
+            message: err
+        });
+    }
+});
 
-}
+//READ BY NAME
+router.get('/lookupstudentname', async(req, res) => {
+    try {
+        const student = await Student.find({name: req.query.name})
+        res.json(student)
+        } catch(err) {
+        res.json({
+            message: err
+        });
+    }
+});
+
+//READ BY NIS
+router.get('/lookupstudentnis', async(req, res) => {
+    try {
+        const student = await Student.find({nis: req.query.nis})
+        res.json(student)
+        } catch(err) {
+        res.json({
+            message: err
+        });
+    }
+});
+
+//READ BY CLASS
+router.get('/lookupstudentclass', async(req, res) => {
+    try {
+        const student = await Student.find({classroom: req.query.classroom})
+        res.json(student)
+        } catch(err) {
+        res.json({
+            message: err
+        });
+    }
+});
+
+//DELETE
+router.delete('/lookupstudents', async(req, res) => {
+    try {
+        const student = await Student.remove({_id: req.query._id})
+        res.json(student)
+        } catch(err) {
+        res.json({
+            message: err
+        });
+    }
+});
+
+module.exports = router;
